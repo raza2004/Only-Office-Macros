@@ -1,0 +1,37 @@
+(function () {
+    const editor = Api.GetDocument();
+    const paragraphs = editor.GetAllParagraphs();
+    const keywords = ["ONLYOFFICE", "macro", "document","is", "highlight"]; // Predefined words
+    const highlightColor = "yellow"; // Highlight color
+
+    paragraphs.forEach((paragraph) => {
+        let text = paragraph.GetText();
+        let newText = "";
+
+        let words = text.split(/\b/); // Split text into words while keeping punctuation
+        let modified = false;
+
+        words = words.map(word => {
+            if (keywords.some(keyword => word.toLowerCase() === keyword.toLowerCase())) {
+                modified = true;
+                return `{${word}}`; // Mark words to be highlighted
+            }
+            return word;
+        });
+
+        if (modified) {
+            paragraph.RemoveAllElements(); // Clear paragraph
+            words.forEach(word => {
+                let run = Api.CreateRun();
+                let cleanWord = word.replace(/[{}]/g, ""); // Remove markers
+
+                if (word.startsWith("{") && word.endsWith("}")) {
+                    run.SetHighlight(highlightColor); // Apply highlight
+                }
+
+                run.AddText(cleanWord);
+                paragraph.AddElement(run);
+            });
+        }
+    });
+})();
