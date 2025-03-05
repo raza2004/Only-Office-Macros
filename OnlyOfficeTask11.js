@@ -1,7 +1,8 @@
 // Watermark Inserter/Remover: Insert/Remove a custom watermark on every page across the entire document.
 (function () {
   var doc = Api.GetDocument();
-  var action = "insert";
+  var action = "insert";      // Put insert or remove
+
   if (action === "insert") {
     // Retrieve the current watermark settings.
     var watermarkSettings = doc.GetWatermarkSettings();
